@@ -9,7 +9,7 @@ public class JaxrsServer {
 // Fields
 //----------------------------------------------------------------------------------------------------------------------
 
-    private static final String DEFAULT_ADDRESS = "http://localhost:7777/cxf";
+    private static final String DEFAULT_ADDRESS = "http://0.0.0.0:7777/cxf";
 
 //----------------------------------------------------------------------------------------------------------------------
 // main() method
