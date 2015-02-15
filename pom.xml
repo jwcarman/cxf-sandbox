@@ -13,12 +13,26 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <maven.compiler.source>1.6</maven.compiler.source>
-        <maven.compiler.target>1.6</maven.compiler.target>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
 
+        <osgi.export>{local-packages};-split-package:=error</osgi.export>
+        <osgi.import>*</osgi.import>
+        <osgi.private>{local-packages}</osgi.private>
+        <osgi.embed/>
+        <osgi.embed.dir>lib</osgi.embed.dir>
+        <osgi.activator/>
+        <osgi.dynamic/>
+
+        <bundle.plugin.version>2.5.3</bundle.plugin.version>
         <cxf.version>3.0.3</cxf.version>
+        <guava.version>18.0</guava.version>
         <slf4j.version>1.7.10</slf4j.version>
     </properties>
+
+    <modules>
+        <module>jaxrs</module>
+    </modules>
 
     <dependencies>
 
@@ -48,5 +62,50 @@
         </dependency>
     </dependencies>
 
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.felix</groupId>
+                    <artifactId>maven-bundle-plugin</artifactId>
+                    <version>${bundle.plugin.version}</version>
+                    <extensions>true</extensions>
+                    <configuration>
+                        <niceManifest>true</niceManifest>
+                        <instructions>
+                            <Import-Package>${osgi.import}</Import-Package>
+                            <Export-Package>${osgi.export}</Export-Package>
+                            <Private-Package>${osgi.private}</Private-Package>
+                            <Embed-Dependency>${osgi.embed}</Embed-Dependency>
+                            <Embed-Directory>${osgi.embed.dir}</Embed-Directory>
+                            <DynamicImport-Package>${osgi.dynamic}</DynamicImport-Package>
+                            <Bundle-Activator>${osgi.activator}</Bundle-Activator>
+                            <Build-Time>${maven.build.timestamp}</Build-Time>
+                            <Specification-Title>${project.name}</Specification-Title>
+                            <Specification-Version>${project.version}</Specification-Version>
+                            <Specification-Vendor>${project.organization.name}</Specification-Vendor>
+                            <Implementation-Title>${project.name}</Implementation-Title>
+                            <Implementation-Version>${project.version}</Implementation-Version>
+                            <Implementation-Vendor-Id>${project.groupId}</Implementation-Vendor-Id>
+                            <Implementation-Vendor>${project.organization.name}</Implementation-Vendor>
+                        </instructions>
+                        <supportedProjectTypes>
+                            <supportedProjectType>jar</supportedProjectType>
+                            <supportedProjectType>bundle</supportedProjectType>
+                        </supportedProjectTypes>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>bundle-manifest</id>
+                            <phase>process-classes</phase>
+                            <goals>
+                                <goal>manifest</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
 </project>
 

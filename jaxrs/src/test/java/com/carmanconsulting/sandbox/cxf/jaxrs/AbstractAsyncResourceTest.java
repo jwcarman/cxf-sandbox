@@ -1,7 +1,27 @@
 package com.carmanconsulting.sandbox.cxf.jaxrs;
 
-/**
- * Created by jcarman on 2/15/15.
- */
-public class AbstractAsyncResourceTest {
+import org.junit.Test;
+
+public class AbstractAsyncResourceTest extends AbstractResourceTest<HelloResourceAsync> {
+//----------------------------------------------------------------------------------------------------------------------
+// Constructors
+//----------------------------------------------------------------------------------------------------------------------
+
+    public AbstractAsyncResourceTest() {
+        super(HelloResourceAsync.class);
+    }
+
+//----------------------------------------------------------------------------------------------------------------------
+// Other Methods
+//----------------------------------------------------------------------------------------------------------------------
+
+    @Override
+    protected HelloResourceAsync createResource() {
+        return new HelloResourceAsync();
+    }
+
+    @Test
+    public void testSayHello() {
+        assertEquals("Hello, Jim!", createWebTarget().path("hello").path("Jim").request().get(String.class));
+    }
 }
