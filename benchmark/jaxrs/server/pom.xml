@@ -5,40 +5,28 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.carmanconsulting.sandbox</groupId>
-        <artifactId>cxf-sandbox</artifactId>
+        <artifactId>jaxrs-benchmark</artifactId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
-    <artifactId>cxf-sandbox-jaxrs</artifactId>
+    <artifactId>jaxrs-benchmark-server</artifactId>
     <packaging>bundle</packaging>
-    <name>CXF Sandbox ::: JAX-RS</name>
+    <name>CXF Sandbox ::: Benchmark ::: JAX-RS ::: Server</name>
+
+    <properties>
+        <exec.mainClass>com.carmanconsulting.sandbox.cxf.benchmark.jaxrs.JaxrsServer</exec.mainClass>
+    </properties>
 
     <dependencies>
         <dependency>
-            <groupId>org.apache.cxf</groupId>
-            <artifactId>cxf-rt-frontend-jaxrs</artifactId>
-            <version>${cxf.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>${guava.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.cxf</groupId>
-            <artifactId>cxf-rt-rs-service-description</artifactId>
-            <version>${cxf.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.cxf</groupId>
-            <artifactId>cxf-rt-rs-client</artifactId>
-            <version>${cxf.version}</version>
+            <groupId>com.carmanconsulting.sandbox</groupId>
+            <artifactId>cxf-sandbox-jaxrs</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
         </dependency>
 
         <dependency>
             <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-rt-transports-http-jetty</artifactId>
             <version>${cxf.version}</version>
-            <scope>test</scope>
         </dependency>
     </dependencies>
 
@@ -48,6 +36,12 @@
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
             </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.3.2</version>
+            </plugin>
+
         </plugins>
     </build>
 </project>

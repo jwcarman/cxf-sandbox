@@ -5,15 +5,16 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.carmanconsulting.sandbox</groupId>
-        <artifactId>cxf-sandbox</artifactId>
+        <artifactId>cxf-sandbox-benchmark</artifactId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
-    <artifactId>cxf-sandbox-benchmark</artifactId>
+    <artifactId>jaxrs-benchmark</artifactId>
     <packaging>pom</packaging>
-    <name>CXF Sandbox ::: Benchmark</name>
+    <name>CXF Sandbox ::: Benchmark ::: JAX-RS</name>
 
     <modules>
-        <module>jaxrs</module>
+        <module>server</module>
+        <module>gatling</module>
     </modules>
 </project>
 
