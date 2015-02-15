@@ -1,4 +1,4 @@
-package com.carmanconsulting.sandbox.cxf.jaxrs;
+package com.carmanconsulting.sandbox.cxf.jaxrs.async;
 
 import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
@@ -7,17 +7,15 @@ import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.container.AsyncResponse;
 import javax.ws.rs.container.TimeoutHandler;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Executor;
-import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
-public class AbstractAsyncResource {
+public abstract class AsyncResource {
 //----------------------------------------------------------------------------------------------------------------------
 // Fields
 //----------------------------------------------------------------------------------------------------------------------
@@ -26,25 +24,22 @@ public class AbstractAsyncResource {
 
     private final AtomicLong threadCount = new AtomicLong();
     private final Supplier<Executor> executorSupplier;
-    private int minThreads = 50;
-    private int maxThreads = 100;
-    private long threadTimeoutValue = 60;
     private long responseTimeoutValue = 10;
-    private int queueCapacity = 1000;
     private TimeUnit responseTimeoutUnit = TimeUnit.SECONDS;
-    private TimeUnit threadTimeoutUnit = TimeUnit.SECONDS;
 
 //----------------------------------------------------------------------------------------------------------------------
 // Constructors
 //----------------------------------------------------------------------------------------------------------------------
 
-    public AbstractAsyncResource() {
+    public AsyncResource() {
         this.executorSupplier = Suppliers.memoize(new ExecutorSupplier());
     }
 
-    public AbstractAsyncResource(Executor executor) {
-        this.executorSupplier = Suppliers.ofInstance(executor);
-    }
+//----------------------------------------------------------------------------------------------------------------------
+// Abstract Methods
+//----------------------------------------------------------------------------------------------------------------------
+
+    protected abstract Executor createExecutor();
 
 //----------------------------------------------------------------------------------------------------------------------
 // Getter/Setter Methods
@@ -54,32 +49,12 @@ public class AbstractAsyncResource {
         return logger;
     }
 
-    public void setMaxThreads(int maxThreads) {
-        this.maxThreads = maxThreads;
-    }
-
-    public void setMinThreads(int minThreads) {
-        this.minThreads = minThreads;
-    }
-
-    public void setQueueCapacity(int queueCapacity) {
-        this.queueCapacity = queueCapacity;
-    }
-
     public void setResponseTimeoutUnit(TimeUnit responseTimeoutUnit) {
         this.responseTimeoutUnit = responseTimeoutUnit;
     }
 
     public void setResponseTimeoutValue(long responseTimeoutValue) {
         this.responseTimeoutValue = responseTimeoutValue;
-    }
-
-    public void setThreadTimeoutUnit(TimeUnit threadTimeoutUnit) {
-        this.threadTimeoutUnit = threadTimeoutUnit;
-    }
-
-    public void setThreadTimeoutValue(long threadTimeoutValue) {
-        this.threadTimeoutValue = threadTimeoutValue;
     }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -97,17 +72,13 @@ public class AbstractAsyncResource {
         }
     }
 
-    public BlockingQueue<Runnable> executorQueue() {
-        return new LinkedBlockingDeque<>(queueCapacity);
-    }
-
-    public ThreadFactory threadFactory() {
-        return r -> new Thread(r, String.format("%s-%d", AbstractAsyncResource.this.getClass().getSimpleName(), threadCount.incrementAndGet()));
+    protected ThreadFactory threadFactory() {
+        return r -> new Thread(r, String.format("%s-%d", AsyncResource.this.getClass().getSimpleName(), threadCount.incrementAndGet()));
     }
 
     protected TimeoutHandler timeoutHandler() {
         return asyncResponse -> asyncResponse.resume(Response.status(Response.Status.SERVICE_UNAVAILABLE)
-                .entity("Operation timed out.").build());
+                .entity("Operation timed out.").type(MediaType.TEXT_PLAIN).build());
     }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -117,13 +88,7 @@ public class AbstractAsyncResource {
     private class ExecutorSupplier implements Supplier<Executor> {
         @Override
         public Executor get() {
-            return new ThreadPoolExecutor(
-                    minThreads,
-                    maxThreads,
-                    threadTimeoutValue,
-                    threadTimeoutUnit,
-                    executorQueue(),
-                    threadFactory());
+            return createExecutor();
         }
     }
 }

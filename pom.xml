@@ -32,6 +32,7 @@
 
     <modules>
         <module>jaxrs</module>
+        <module>benchmark</module>
     </modules>
 
     <dependencies>

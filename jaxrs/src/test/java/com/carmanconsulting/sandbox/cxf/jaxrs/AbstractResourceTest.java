@@ -2,7 +2,6 @@ package com.carmanconsulting.sandbox.cxf.jaxrs;
 
 import org.apache.cxf.endpoint.Server;
 import org.apache.cxf.feature.Feature;
-import org.apache.cxf.feature.LoggingFeature;
 import org.apache.cxf.jaxrs.JAXRSServerFactoryBean;
 import org.apache.cxf.jaxrs.client.JAXRSClientFactory;
 import org.apache.cxf.jaxrs.lifecycle.SingletonResourceProvider;
@@ -16,7 +15,6 @@ import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -80,11 +78,11 @@ public abstract class AbstractResourceTest<R> extends Assert {
     }
 
     protected List<Object> getProviders() {
-        return new ArrayList<>();
+        return Arrays.asList();
     }
 
     protected List<Feature> getFeatures() {
-        return Arrays.asList(new LoggingFeature());
+        return Arrays.asList();
     }
 
     @Before
