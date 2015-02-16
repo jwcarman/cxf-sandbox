@@ -16,7 +16,7 @@ class RecordedSimulation extends Simulation {
 
   val scn = scenario("hello").repeat(1000) {
     exec(http("request_0")
-      .get("/cxf/hello/CXF"))
+      .get("/cxf/hello/jcarman"))
   }
 
   setUp(scn.inject(rampUsers(500) over (10 seconds)))
