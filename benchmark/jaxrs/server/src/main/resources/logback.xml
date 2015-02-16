@@ -1,0 +1,10 @@
+<configuration>
+    <appender name="out" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{MM-dd@HH:mm:ss} %-5p \(%c{0}\) - %m%n</pattern>
+        </encoder>
+    </appender>
+    <root level="INFO">
+        <appender-ref ref="out"/>
+    </root>
+</configuration>

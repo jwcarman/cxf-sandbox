@@ -14,15 +14,50 @@
 
     <properties>
         <exec.mainClass>com.carmanconsulting.sandbox.cxf.benchmark.jaxrs.JaxrsServer</exec.mainClass>
+
+        <cassandra.version>2.1.2</cassandra.version>
+        <cassandra.driver.version>2.1.4</cassandra.driver.version>
+        <cassandra.unit.version>2.0.2.2</cassandra.unit.version>
+        <guava.version>18.0</guava.version>
+        <hecate.version>1.1.0</hecate.version>
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>org.apache.cassandra</groupId>
+            <artifactId>cassandra-all</artifactId>
+            <version>${cassandra.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.cassandra</groupId>
+            <artifactId>cassandra-thrift</artifactId>
+            <version>${cassandra.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${guava.version}</version>
+        </dependency>
         <dependency>
             <groupId>com.carmanconsulting.sandbox</groupId>
             <artifactId>cxf-sandbox-jaxrs</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
-
+        <dependency>
+            <groupId>com.savoirtech.hecate</groupId>
+            <artifactId>hecate-cql3</artifactId>
+            <version>${hecate.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.datastax.cassandra</groupId>
+            <artifactId>cassandra-driver-core</artifactId>
+            <version>${cassandra.driver.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.cassandraunit</groupId>
+            <artifactId>cassandra-unit</artifactId>
+            <version>${cassandra.unit.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-rt-transports-http-jetty</artifactId>

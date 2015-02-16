@@ -19,6 +19,6 @@ class RecordedSimulation extends Simulation {
       .get("/cxf/hello/CXF"))
   }
 
-  setUp(scn.inject(rampUsers(600) over (10 seconds)))
+  setUp(scn.inject(rampUsers(500) over (10 seconds)))
     .protocols(httpProtocol)
 }
