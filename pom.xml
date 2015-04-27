@@ -32,6 +32,7 @@
 
     <modules>
         <module>jaxrs</module>
+        <module>jaxws</module>
         <module>benchmark</module>
     </modules>
 
