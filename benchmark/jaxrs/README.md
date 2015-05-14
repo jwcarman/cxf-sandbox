@@ -14,6 +14,8 @@ or
 mvn -Psync exec:java
 ```
 
+where the profile name indicates which type of JAX-RS server you wish to stary (asynchronous vs. synchronous)
+
 ### Running Gatling
 
 From the "gatling" project, run:
