@@ -11,12 +11,20 @@
     <name>CXF Sandbox ::: Benchmark ::: JAX-RS ::: Gatling</name>
 
     <properties>
-        <gatling.version>2.1.4</gatling.version>
-        <scala.version>2.11.5</scala.version>
+        <gatling.version>2.1.5</gatling.version>
+        <scala.version>2.11.6</scala.version>
 
-        <gatling.plugin.version>2.1.2</gatling.plugin.version>
+        <gatling.plugin.version>2.1.5</gatling.plugin.version>
         <scala.plugin.version>2.15.2</scala.plugin.version>
 
+        <!-- Number of Users -->
+        <users>500</users>
+
+        <!-- Ramp up Duration -->
+        <duration>10</duration>
+
+        <!-- Number of Requests per User -->
+        <repeat>5000</repeat>
     </properties>
 
     <dependencies>
@@ -45,10 +53,6 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>org.apache.felix</groupId>
-                <artifactId>maven-bundle-plugin</artifactId>
-            </plugin>
-            <plugin>
                 <groupId>org.scala-tools</groupId>
                 <artifactId>maven-scala-plugin</artifactId>
                 <version>${scala.plugin.version}</version>
@@ -67,10 +71,12 @@
                 <artifactId>gatling-maven-plugin</artifactId>
                 <version>${gatling.plugin.version}</version>
                 <configuration>
-                    <dataFolder>src/test/resources/data</dataFolder>
-                    <resultsFolder>target/gatling/results</resultsFolder>
-                    <bodiesFolder>src/test/resources/request-bodies</bodiesFolder>
-                    <simulationsFolder>src/test/scala</simulationsFolder>
+                    <jvmArgs>
+                        <jvmArg>-Dusers=${users}</jvmArg>
+                        <jvmArg>-Drepeat=${repeat}</jvmArg>
+                        <jvmArg>-Dduration=${duration}</jvmArg>
+                    </jvmArgs>
+                    <simulationClass>com.carmanconsulting.sandbox.cxf.benchmark.jaxrs.RecordedSimulation</simulationClass>
                 </configuration>
             </plugin>
         </plugins>

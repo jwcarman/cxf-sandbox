@@ -14,11 +14,16 @@ class RecordedSimulation extends Simulation {
     .acceptHeader("text/plain")
     .acceptEncodingHeader("gzip, deflate, sdch")
 
-  val scn = scenario("hello").repeat(1000) {
+  val repeat = System.getProperty("repeat", "1000")
+  val users = System.getProperty("users", "500")
+  val duration = System.getProperty("duration", "10")
+
+  val scn = scenario("hello").repeat(repeat.toInt) {
     exec(http("request_0")
       .get("/cxf/hello/jcarman"))
   }
 
-  setUp(scn.inject(rampUsers(500) over (10 seconds)))
+
+  setUp(scn.inject(rampUsers(users.toInt) over (duration.toInt seconds)))
     .protocols(httpProtocol)
 }
