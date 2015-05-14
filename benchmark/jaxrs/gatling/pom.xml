@@ -24,7 +24,7 @@
         <duration>10</duration>
 
         <!-- Number of Requests per User -->
-        <repeat>5000</repeat>
+        <repeat>1000</repeat>
     </properties>
 
     <dependencies>
@@ -65,6 +65,9 @@
                         </goals>
                     </execution>
                 </executions>
+                <configuration>
+                    <checkMultipleScalaVersions>false</checkMultipleScalaVersions>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>io.gatling</groupId>

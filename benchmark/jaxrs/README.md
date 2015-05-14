@@ -2,7 +2,7 @@
 
 ## Starting the Server
 
-From the "server" project, run:
+From the "server" module, run:
  
 ```
 mvn -Pasync exec:java
@@ -18,7 +18,7 @@ where the profile name indicates which type of JAX-RS server you wish to stary (
 
 ### Running Gatling
 
-From the "gatling" project, run:
+From the "gatling" module, run:
 
 ```
 mvn clean install gatling:exec
