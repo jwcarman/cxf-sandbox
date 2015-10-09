@@ -15,11 +15,14 @@
     <properties>
         <exec.mainClass>com.carmanconsulting.sandbox.cxf.benchmark.jaxrs.JaxrsServer</exec.mainClass>
 
-        <cassandra.version>2.1.2</cassandra.version>
-        <cassandra.driver.version>2.1.4</cassandra.driver.version>
+        <cassandra.version>2.1.5</cassandra.version>
+        <cassandra.driver.version>2.1.6</cassandra.driver.version>
         <cassandra.unit.version>2.0.2.2</cassandra.unit.version>
         <guava.version>18.0</guava.version>
-        <hecate.version>1.1.0</hecate.version>
+        <hecate.version>2.0.8</hecate.version>
+
+        <minDelay>100</minDelay>
+        <randDelay>200</randDelay>
     </properties>
 
     <dependencies>
@@ -45,7 +48,7 @@
         </dependency>
         <dependency>
             <groupId>com.savoirtech.hecate</groupId>
-            <artifactId>hecate-cql3</artifactId>
+            <artifactId>hecate-pojo</artifactId>
             <version>${hecate.version}</version>
         </dependency>
         <dependency>
@@ -80,6 +83,16 @@
                         <systemProperty>
                             <key>resourceClass</key>
                             <value>${resourceClass}</value>
+                        </systemProperty>
+
+                        <systemProperty>
+                            <key>minDelay</key>
+                            <value>${minDelay}</value>
+                        </systemProperty>
+
+                        <systemProperty>
+                            <key>randDelay</key>
+                            <value>${randDelay}</value>
                         </systemProperty>
                     </systemProperties>
                 </configuration>

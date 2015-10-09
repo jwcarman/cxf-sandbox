@@ -32,7 +32,7 @@ public abstract class AsyncResource {
 //----------------------------------------------------------------------------------------------------------------------
 
     public AsyncResource() {
-        this.executorSupplier = Suppliers.memoize(new ExecutorSupplier());
+        this.executorSupplier = Suppliers.memoize(this::createExecutor);
     }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -72,6 +72,10 @@ public abstract class AsyncResource {
         }
     }
 
+    protected Executor getExecutor() {
+        return executorSupplier.get();
+    }
+
     protected ThreadFactory threadFactory() {
         return r -> new Thread(r, String.format("%s-%d", AsyncResource.this.getClass().getSimpleName(), threadCount.incrementAndGet()));
     }
@@ -79,16 +83,5 @@ public abstract class AsyncResource {
     protected TimeoutHandler timeoutHandler() {
         return asyncResponse -> asyncResponse.resume(Response.status(Response.Status.SERVICE_UNAVAILABLE)
                 .entity("Operation timed out.").type(MediaType.TEXT_PLAIN).build());
-    }
-
-//----------------------------------------------------------------------------------------------------------------------
-// Inner Classes
-//----------------------------------------------------------------------------------------------------------------------
-
-    private class ExecutorSupplier implements Supplier<Executor> {
-        @Override
-        public Executor get() {
-            return createExecutor();
-        }
     }
 }

@@ -1,22 +1,27 @@
 package com.carmanconsulting.sandbox.cxf.jaxrs;
 
-import org.apache.cxf.endpoint.Server;
-import org.apache.cxf.feature.Feature;
-import org.apache.cxf.jaxrs.JAXRSServerFactoryBean;
-import org.apache.cxf.jaxrs.client.JAXRSClientFactory;
-import org.apache.cxf.jaxrs.lifecycle.SingletonResourceProvider;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.Collections;
+import java.util.List;
 
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
-import java.util.Arrays;
-import java.util.List;
+
+import org.apache.cxf.endpoint.Server;
+import org.apache.cxf.feature.Feature;
+import org.apache.cxf.jaxrs.JAXRSServerFactoryBean;
+import org.apache.cxf.jaxrs.client.JAXRSClientFactory;
+import org.apache.cxf.jaxrs.lifecycle.SingletonResourceProvider;
+import org.apache.cxf.testutil.common.TestUtil;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.rules.TestName;
+import org.mockito.MockitoAnnotations;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public abstract class AbstractResourceTest<R> extends Assert {
 //----------------------------------------------------------------------------------------------------------------------
@@ -24,9 +29,11 @@ public abstract class AbstractResourceTest<R> extends Assert {
 //----------------------------------------------------------------------------------------------------------------------
 
     private static final String WADL_SUFFIX = "?_wadl";
+    @Rule
+    public TestName testName = new TestName();
     private final Logger logger = LoggerFactory.getLogger(getClass());
     private Server server;
-
+    private int port;
     private final Class<R> resourceClass;
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -51,12 +58,19 @@ public abstract class AbstractResourceTest<R> extends Assert {
         return logger;
     }
 
+    public int getPort() {
+        return port;
+    }
+
 //----------------------------------------------------------------------------------------------------------------------
 // Other Methods
 //----------------------------------------------------------------------------------------------------------------------
 
-    protected R createClientProxy() {
-        return JAXRSClientFactory.create(getAddress(), resourceClass);
+    protected <T> T createClientProxy(Class<T> proxyInterface) {
+        if(!proxyInterface.isAssignableFrom(resourceClass)) {
+            throw new IllegalArgumentException(String.format("Class %s is not a superclass/superinterface of %s", proxyInterface.getName(), resourceClass.getName()));
+        }
+        return JAXRSClientFactory.create(getAddress(), proxyInterface, getClientProxyProviders());
     }
 
     protected WebTarget createWebTarget() {
@@ -70,23 +84,25 @@ public abstract class AbstractResourceTest<R> extends Assert {
     }
 
     protected String getAddress() {
-        return String.format("http://localhost:%d/%s", getPort(), resourceClass.getSimpleName());
+        return String.format("http://localhost:%d/%s/", port, resourceClass.getSimpleName());
     }
 
-    protected int getPort() {
-        return 7777;
-    }
-
-    protected List<Object> getProviders() {
-        return Arrays.asList();
+    protected List<Object> getClientProxyProviders() {
+        return Collections.emptyList();
     }
 
     protected List<Feature> getFeatures() {
-        return Arrays.asList();
+        return Collections.emptyList();
+    }
+
+    protected List<Object> getProviders() {
+        return Collections.emptyList();
     }
 
     @Before
     public void initialize() throws Exception {
+        MockitoAnnotations.initMocks(this);
+        this.port = 500 + Integer.parseInt(TestUtil.getNewPortNumber(getClass().getName(), testName.getMethodName()));
         startServer();
         waitForWADL();
     }
@@ -102,16 +118,17 @@ public abstract class AbstractResourceTest<R> extends Assert {
     }
 
     private void waitForWADL() throws Exception {
-        Invocation.Builder client = ClientBuilder.newClient().target(getWadlAddress()).request();
+        String wadlAddress = getWadlAddress();
+        Invocation.Builder client = ClientBuilder.newClient().target(wadlAddress).request();
 
-        for (int i = 0; i < 20; i++) {
+        for (int i = 0; i < 10; i++) {
             Thread.sleep(1000);
             Response response = client.get();
             if (response.getStatus() == 200) {
-                logger.info("WADL available, proceeding with tests...");
+                logger.info("WADL {} available, proceeding with tests...", wadlAddress);
                 return;
             } else {
-                logger.info("WADL not available yet, waiting 1 more second...");
+                logger.info("WADL {} not available yet, waiting 1 more second...", wadlAddress);
             }
         }
     }

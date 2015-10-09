@@ -1,13 +1,13 @@
 package com.carmanconsulting.sandbox.cxf.benchmark.jaxrs;
 
-import com.savoirtech.hecate.cql3.annotations.Id;
+import com.savoirtech.hecate.annotation.Id;
 
 public class Person {
 //----------------------------------------------------------------------------------------------------------------------
 // Fields
 //----------------------------------------------------------------------------------------------------------------------
 
-    @Id 
+    @Id
     private String id;
     
     private String fullName;
